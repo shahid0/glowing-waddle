@@ -1,7 +1,7 @@
 name: US-miner
 on:
   schedule:
-    - cron: '*/20 * * * *'  # Fixed cron syntax (added missing asterisks)
+    - cron: '*/120 * * * *'  # Fixed cron syntax (added missing asterisks)
   workflow_dispatch:
 
 concurrency:
