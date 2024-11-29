@@ -18,7 +18,8 @@ async function main() {
   const config = new Config();
   const bot = new Bot(config);
 
-  const proxySource = await selectProxySource("S8");
+  // const proxySource = await selectProxySource("S8"); //us connection
+  const proxySource = { type :'none'}
 
   let proxies = [];
   if (proxySource.type === 'file') {
