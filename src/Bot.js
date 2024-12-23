@@ -45,7 +45,10 @@ class Bot {
       const agent = formattedProxy.startsWith('http')
         ? new HttpsProxyAgent(formattedProxy)
         : new SocksProxyAgent(formattedProxy);
-      const wsURL = `wss://${this.config.wssHost}`;
+      
+      // const wsURL = `wss://${this.config.wssHost}`;
+      const uriList = ["wss://proxy2.wynd.network:4444/", "wss://proxy2.wynd.network:4650/"];
+      const wsURL = uriList[Math.floor(Math.random() * uriList.length)];;
       const ws = new WebSocket(wsURL, {
         agent,
         headers: {
