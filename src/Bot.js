@@ -53,10 +53,10 @@ class Bot {
         agent,
         headers: {
           'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0',
-          Pragma: 'no-cache',
-          'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
-          'Cache-Control': 'no-cache',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.2365.57',
+          // Pragma: 'no-cache',
+          // 'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
+          // 'Cache-Control': 'no-cache',
           OS: 'Windows',
           Platform: 'Desktop',
           Browser: 'Mozilla',
@@ -83,7 +83,7 @@ class Bot {
               user_agent: 'Mozilla/5.0',
               timestamp: Math.floor(Date.now() / 1000),
               device_type: 'desktop',
-              version: '4.28.2',
+              version: '4.30.0',
             },
           };
           ws.send(JSON.stringify(authResponse));
@@ -153,7 +153,7 @@ class Bot {
               user_agent: 'Mozilla/5.0',
               timestamp: Math.floor(Date.now() / 1000),
               device_type: 'desktop',
-              version: '4.28.2',
+              version: '4.30.0',
             },
           };
           ws.send(JSON.stringify(authResponse));
