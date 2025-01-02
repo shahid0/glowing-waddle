@@ -140,6 +140,79 @@ class Bot {
         }
     }
 
+    async connectDirectly(userID) {
+    try {
+        const wsOptions = {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                OS: 'Windows',
+                Platform: 'Desktop',
+                Browser: 'Mozilla',
+            },
+            rejectUnauthorized: false,
+            checkServerIdentity: () => undefined,
+        };
+
+        const wsURL = this.getRandomURI();
+        const deviceId = this.generateDeviceId('direct-connection');
+        const ws = new WebSocket(wsURL, wsOptions);
+
+        ws.on('open', () => {
+            console.log(`Connected directly without proxy`.cyan);
+            console.log(`Device ID: ${deviceId}`.cyan);
+            this.sendPing(ws, 'Direct IP');
+        });
+
+        ws.on('message', (message) => {
+            const msg = JSON.parse(message);
+            console.log(`Received message: ${JSON.stringify(msg)}`.blue);
+
+            if (msg.action === 'AUTH') {
+                const authResponse = {
+                    id: msg.id,
+                    origin_action: 'AUTH',
+                    result: {
+                        browser_id: deviceId,
+                        user_id: userID,
+                        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                        timestamp: Math.floor(Date.now() / 1000),
+                        device_type: 'desktop',
+                        version: '4.29.0',
+                    },
+                };
+                ws.send(JSON.stringify(authResponse));
+                console.log(
+                    `Sent auth response: ${JSON.stringify(authResponse)}`.green
+                );
+            } else if (msg.action === 'PONG') {
+                const pongResponse = {
+                    id: msg.id,
+                    origin_action: 'PONG'
+                };
+                ws.send(JSON.stringify(pongResponse));
+                console.log(`Sent PONG response: ${JSON.stringify(pongResponse)}`.blue);
+            }
+        });
+
+        ws.on('close', (code, reason) => {
+            console.log(
+                `WebSocket closed with code: ${code}, reason: ${reason}`.yellow
+            );
+            setTimeout(
+                () => this.connectDirectly(userID),
+                this.config.retryInterval
+            );
+        });
+
+        ws.on('error', (error) => {
+            console.error(`WebSocket error: ${error.message}`.red);
+            ws.terminate();
+        });
+    } catch (error) {
+        console.error(`Failed to connect directly: ${error.message}`.red);
+    }
+}
+
     sendPing(ws, proxyIP) {
         setInterval(() => {
             const pingMessage = {
